@@ -40,11 +40,14 @@ class lumberjack::params {
   # service status
   $status = 'enabled'
 
+  # Restart service on change
+  $restart_on_change = false
+
   #### Internal module values
 
   # packages
   case $::operatingsystem {
-    'CentOS', 'Fedora', 'Scientific': {
+    'CentOS', 'Fedora', 'Scientific', 'OracleLinux', 'Amazon', 'RedHat': {
       # main application
       $package = [ 'lumberjack' ]
     }
@@ -60,7 +63,7 @@ class lumberjack::params {
 
   # service parameters
   case $::operatingsystem {
-    'CentOS', 'Fedora', 'Scientific': {
+    'CentOS', 'Fedora', 'Scientific', 'OracleLinux', 'Amazon', 'RedHat': {
       $service_name       = 'lumberjack'
       $service_hasrestart = true
       $service_hasstatus  = true

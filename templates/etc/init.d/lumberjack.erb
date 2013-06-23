@@ -1,5 +1,5 @@
 <%-
-fields = scope.lookupvar('lumberjack::fields')
+fields = @fields
 if fields
   extra_fields = fields.collect { |k,v| "--field #{k}=#{v}" }.join(" ")
 else
@@ -13,12 +13,11 @@ end
 # processname: lumberjack
 
 DAEMON_PATH="/opt/lumberjack/"
-
 DAEMON="bin/lumberjack.sh"
-DAEMONOPTS="--ssl-ca-path /etc/lumberjack/ca.crt --host <%= scope.lookupvar('lumberjack::host') %> --port <%= scope.lookupvar('lumberjack::port') %> <%= extra_fields %> <%= scope.lookupvar('lumberjack::logfiles') %>"
+DAEMONOPTS="--ssl-ca-path /etc/lumberjack/<%= @instance %>/ca.crt --host <%= @host %> --port <%= @port %> <%= extra_fields %> <%= @logfiles %>"
 
-NAME=lumberjack
-DESC="Lumberjack"
+NAME="lumberjack-<%= @instance %>"
+DESC="Lumberjack-<%= @instance %>"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 

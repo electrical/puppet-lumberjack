@@ -93,15 +93,11 @@
 # * Richard Pijnenburg <mailto:richard@ispavailability.com>
 #
 class lumberjack(
-  $host,
-  $port,
-  $files,
-  $ssl_ca_path,
-  $ensure      = $lumberjack::params::ensure,
-  $autoupgrade = $lumberjack::params::autoupgrade,
-  $status      = $lumberjack::params::status,
-  $version     = false,
-  $fields      = false
+  $ensure            = $lumberjack::params::ensure,
+  $autoupgrade       = $lumberjack::params::autoupgrade,
+  $status            = $lumberjack::params::status,
+  $restart_on_change = $lumberjack::params::restart_on_change,
+  $version           = false,
 ) inherits lumberjack::params {
 
   #### Validate parameters
@@ -119,44 +115,11 @@ class lumberjack(
     fail("\"${status}\" is not a valid status parameter value")
   }
 
-  validate_string($host)
-
-  if ! is_numeric($port) {
-    fail("\"${port}\" is not a valid port parameter value")
-  }
-
-  validate_array($files)
-  $logfiles = join($files,' ')
-
-  if $fields {
-    validate_hash($fields)
-  }
-
   #### Manage actions
+  anchor { 'lumberjack::begin': }
+  anchor { 'lumberjack::end': }
 
   # package(s)
   class { 'lumberjack::package': }
-
-  # service(s)
-  class { 'lumberjack::service': }
-
-  # file(s)
-  class { 'lumberjack::config': }
-
-
-  #### Manage relationships
-
-  if $ensure == 'present' {
-    # we need the software before running a service
-    Class['lumberjack::package'] -> Class['lumberjack::config']
-
-    Class['lumberjack::config']  -> Class['lumberjack::service']
-    Class['lumberjack::package'] -> Class['lumberjack::service']
-
-  } else {
-
-    # make sure all services are getting stopped before software removal
-    Class['lumberjack::service'] -> Class['lumberjack::package']
-  }
 
 }
