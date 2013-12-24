@@ -1,5 +1,9 @@
 # puppet-lumberjack
 
+
+NOTE: This module is deprecated and will not be updated.
+I'll be starting on a new module for the logstash-forwarder after x-mas.
+
 A puppet module for managing and configuring lumberjack
 
 https://github.com/jordansissel/lumberjack
